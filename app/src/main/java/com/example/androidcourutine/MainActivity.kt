@@ -75,4 +75,45 @@ class MainActivity : AppCompatActivity() {
         delay(1000)
         Log.d(TAG,"Ending task2")
     }
+
+    private suspend fun getFbFollowers():Int{
+        delay(1000)
+        return 100
+    }
+    private suspend fun getInstaFollowers():Int{
+        delay(1000)
+        return 154
+    }
+
+
+     fun followerCounter(view: View) {
+        CoroutineScope(Dispatchers.IO).launch {
+            printFollowers()
+        }
+    }
+
+    private suspend fun printFollowers() {
+      /*  kotlin job helps to execute coroutine \\ job.join() will hold the function until it get the following output
+      * if a we expect result/output from coroutine then we can use async.Async returns Deferred object . And Deferred is generics type  and it means postpone*/
+
+        var fbFollower = 0
+        val job = CoroutineScope(Dispatchers.IO).launch {
+            fbFollower = getFbFollowers()
+        }
+        val insta = CoroutineScope(Dispatchers.IO).async {
+            getInstaFollowers()
+        }
+        job.join()
+        Log.d(TAG, fbFollower.toString()+" "+insta.await())
+
+        //another way to write above function ^^^^
+//        CoroutineScope(Dispatchers.IO).launch {
+//            var fb = async { getFbFollowers() }
+//            var instaf = async { getInstaFollowers() }
+//            Log.d(TAG,"fb= ${fb.await()} insta= ${instaf.await()}")
+//        }
+
+
+
+    }
 }
