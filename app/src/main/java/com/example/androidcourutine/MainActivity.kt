@@ -22,7 +22,8 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "Current Thread name is ${Thread.currentThread().name}")
 
         CoroutineScope(Dispatchers.Main).launch {
-            executeFun()
+            //executeFun()
+            executeTask()
         }
 
     }
@@ -137,6 +138,14 @@ class MainActivity : AppCompatActivity() {
         }
         parentJob.join()
         Log.d(TAG,"parent job completed")
+    }
+    private suspend fun executeTask(){
+        Log.d(TAG,"Before starting")
+        withContext(Dispatchers.IO){
+            delay(2000L)
+            Log.d(TAG,"Inside")
+        }
+        Log.d(TAG,"After")
     }
 
 
