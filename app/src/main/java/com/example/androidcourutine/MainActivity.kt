@@ -1,18 +1,23 @@
 package com.example.androidcourutine
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.*
-import kotlin.concurrent.thread
+
 
 class MainActivity : AppCompatActivity() {
 
     private val TAG:String = "KotlinFun"
     lateinit var counterText:TextView
     var counterNum:Int =0
+    lateinit var mainViewModel:MainViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,10 +26,16 @@ class MainActivity : AppCompatActivity() {
         counterText = findViewById(R.id.textView)
         Log.d(TAG, "Current Thread name is ${Thread.currentThread().name}")
 
+        mainViewModel = ViewModelProvider(this)[MainViewModel::class.java] // using index operator instead of get
+
+
+
         CoroutineScope(Dispatchers.Main).launch {
             //executeFun()
             executeTask()
         }
+
+
 
     }
 
@@ -41,6 +52,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun doAction(view: View) {
+
         /*Coroutine run on top of thread & its lightweight
         * Dispatchers is a way to define threads on which Coroutines are executed
         * Predefined dispatchers - dispatchers.io for i/o operation \\ dispatchers.Main for running on main thread \\ dispatchers.default for default operation
@@ -141,6 +153,8 @@ class MainActivity : AppCompatActivity() {
     }
     private suspend fun executeTask(){
         Log.d(TAG,"Before starting")
+        //globalScope is non blocking nature but with context is blocking nature it will suspend the function complete the task then move forward and withContext run with context
+
         withContext(Dispatchers.IO){
             delay(2000L)
             Log.d(TAG,"Inside")
@@ -148,6 +162,16 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG,"After")
     }
 
+    fun intentAction(view: View) {
 
+        runBlocking {
+            lifecycleScope.launch {
+                delay(1000)
+                val intent= Intent(this@MainActivity,MainActivity2::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
 
+    }
 }
