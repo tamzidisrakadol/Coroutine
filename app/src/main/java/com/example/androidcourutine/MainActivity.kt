@@ -21,6 +21,10 @@ class MainActivity : AppCompatActivity() {
         counterText = findViewById(R.id.textView)
         Log.d(TAG, "Current Thread name is ${Thread.currentThread().name}")
 
+        CoroutineScope(Dispatchers.Main).launch {
+            executeFun()
+        }
+
     }
 
     fun fCounter(view: View) {
@@ -112,8 +116,29 @@ class MainActivity : AppCompatActivity() {
 //            var instaf = async { getInstaFollowers() }
 //            Log.d(TAG,"fb= ${fb.await()} insta= ${instaf.await()}")
 //        }
-
-
-
     }
+
+    private suspend fun executeFun(){
+        // job hierarchy + we can create multiple job in single coroutine \\ in this function parent job will start and then child job.Parent job will ended until the child job end
+        // we can cancel the job if parent job get cancel all the child job will also cancel
+
+
+
+        val parentJob = GlobalScope.launch(Dispatchers.Main) {
+            Log.d(TAG,"parent job started")
+
+            var childJob = launch(Dispatchers.IO) {
+                Log.d(TAG,"child job started")
+                delay(5000)
+                Log.d(TAG,"child job ended")
+            }
+            delay(3000)
+            Log.d(TAG,"parent job ended")
+        }
+        parentJob.join()
+        Log.d(TAG,"parent job completed")
+    }
+
+
+
 }
