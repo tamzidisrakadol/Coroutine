@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -19,16 +20,15 @@ class MainActivity : AppCompatActivity() {
     lateinit var mainViewModel:MainViewModel
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         counterText = findViewById(R.id.textView)
-        Log.d(TAG, "Current Thread name is ${Thread.currentThread().name}")
+
 
         mainViewModel = ViewModelProvider(this)[MainViewModel::class.java] // using index operator instead of get
-
-
 
         CoroutineScope(Dispatchers.Main).launch {
             //executeFun()
