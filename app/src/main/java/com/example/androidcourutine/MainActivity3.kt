@@ -35,51 +35,63 @@ class MainActivity3 : AppCompatActivity() {
         producer()
         consumer()
 
+//        lifecycleScope.launch {
+//            //this "data" variable  is a consumer \\ if there is no consumer then producer not produce data
+//            val data: Flow<Int> = listProducer()
+//            val time = measureTimeMillis {
+//                data.collect {
+//                    Log.d(TAG, "1st consumer ${it.toString()}")
+//                }
+//            }
+//            Log.d(TAG, "time taken $time")
+//        }
+//
+//        lifecycleScope.launch {
+//            //can create multiple consumer -> there will be not waste of data for delay
+//
+//            val data2 = listProducer()
+//            delay(2000L)
+//            //event of consumer
+//
+//                data2.map {
+//                    Log.d(TAG,"map thread name:  ${Thread.currentThread().name}")
+//                    it * 2
+//                }
+//                    .filter {
+//                        it < 200
+//                    }
+//                    .buffer(3)
+//                    .onStart {
+//                        //can add value on start
+//                        emit(-2)
+//                        Log.d(TAG,"started")
+//                    }
+//                    .onCompletion {
+//                        //can also add value just before complete
+//                        emit(200)
+//                        Log.d(TAG,"completed")
+//                    }
+//                    .onEach {
+//                        Log.d(TAG,"About to emit $it")
+//                    }
+//                    .flowOn(Dispatchers.IO) // consumer can switch the coroutine context by telling it to flowOn
+//                    .collect {
+//                        Log.d(TAG,"Thread name = ${Thread.currentThread().name}")
+//                        Log.d(TAG, "2nd consumer ${it.toString()}")
+//                    }
+//
+//        }
+
+
+
         lifecycleScope.launch {
-            //this "data" variable  is a consumer \\ if there is no consumer then producer not produce data
-            val data: Flow<Int> = listProducer()
-            val time = measureTimeMillis {
-                data.collect {
-                    Log.d(TAG, "1st consumer ${it.toString()}")
+            try {
+                listProducer().collect{
+                    Log.d(TAG,it.toString())
                 }
+            }catch (e:Exception){
+                Log.d(TAG,e.message.toString())
             }
-            Log.d(TAG, "time taken $time")
-        }
-
-        lifecycleScope.launch {
-            //can create multiple consumer -> there will be not waste of data for delay
-
-            val data2 = listProducer()
-            delay(2000L)
-            //event of consumer
-
-                data2.map {
-                    it * 2
-                }
-                    .filter {
-                        it < 200
-                    }
-                    .buffer(3)
-                    .onStart {
-                        //can add value on start
-                        emit(-2)
-                        Log.d(TAG,"started")
-                    }
-                    .onCompletion {
-                        //can also add value just before complete
-                        emit(200)
-                        Log.d(TAG,"completed")
-                    }
-                    .onEach {
-                        Log.d(TAG,"About to emit $it")
-                    }
-                    .collect {
-                        Log.d(TAG, "2nd consumer ${it.toString()}")
-                    }
-
-
-
-
         }
 
     }
@@ -106,7 +118,10 @@ class MainActivity3 : AppCompatActivity() {
         list.forEach {
             delay(1000L)
             emit(it)
+            throw Exception("Error in list producing ")
         }
+    }.catch {
+        Log.d(TAG,"Emmit catch ${it.message}")
     }
 
 }
