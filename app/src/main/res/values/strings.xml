@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">AndroidCourutine</string>
     <string name="fetch_data">Fetch Data</string>
+    <string name="intent">Intent</string>
 </resources>

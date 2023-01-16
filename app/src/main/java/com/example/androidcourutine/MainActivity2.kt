@@ -1,9 +1,11 @@
 package com.example.androidcourutine
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import com.example.androidcourutine.R.id.intentActivityBtn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -20,10 +22,16 @@ class MainActivity2 : AppCompatActivity() {
         setContentView(R.layout.activity_main2)
 
         val fetchBtn:Button = findViewById(R.id.fetchBtn)
+        val intentBtn:Button = findViewById(intentActivityBtn)
 
 
         fetchBtn.setOnClickListener {
             fetchData()
+        }
+
+        intentBtn.setOnClickListener {
+            val intent = Intent(this@MainActivity2,MainActivity3::class.java)
+            startActivity(intent)
         }
 
 
