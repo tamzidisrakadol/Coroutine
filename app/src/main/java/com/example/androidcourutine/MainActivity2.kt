@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.Toast
 import com.example.androidcourutine.R.id.intentActivityBtn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -33,7 +34,6 @@ class MainActivity2 : AppCompatActivity() {
             val intent = Intent(this@MainActivity2,MainActivity3::class.java)
             startActivity(intent)
         }
-
 
     }
 
