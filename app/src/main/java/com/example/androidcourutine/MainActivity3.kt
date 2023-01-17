@@ -31,6 +31,8 @@ class MainActivity3 : AppCompatActivity() {
            kotlin has asynchronous stream support using channels and flow
            * Channel -> Send & Receive -> Channels are hot-> Channels will continuously produce data if there is no consumer exist ex:Cinema hall
            * FLows -> Emit  and Collect -> Flows are Cold -> Flows will only product the data when there is consumer ex: netflix
+           * LiveData -> Transformation on main thread, operators, LifeCycle Dependent
+           *StateFlow -> run on any thread, multiple operator, LifeCycle independent
            **/
         producer()
         consumer()
@@ -91,7 +93,7 @@ class MainActivity3 : AppCompatActivity() {
 //                Log.d(TAG,e.message.toString())
 //            }
 //        }
-        lifecycleScope.launch {
+       /* lifecycleScope.launch {
             val data4 = flowListUser()
             data4.collect{
                 Log.d(TAG,"data4 ITem- $it")
@@ -105,7 +107,15 @@ class MainActivity3 : AppCompatActivity() {
                 Log.d(TAG,"data5 ITem- $it")
             }
         }
+*/
 
+        lifecycleScope.launch {
+            val data6 = stateFowListUser()
+            delay(6000L)
+            data6.collect{
+                Log.d(TAG,"data6 ITem- $it")
+            }
+        }
     }
 
     fun producer() { //producing data
@@ -151,6 +161,19 @@ class MainActivity3 : AppCompatActivity() {
             }
         }
         return mutableFlow
+    }
+
+
+//stateFlow -> Hot
+    private fun stateFowListUser():Flow<Int>{
+        val mutableStateFlow = MutableStateFlow(10)
+        lifecycleScope.launch{
+            delay(2000L)
+            mutableStateFlow.emit(200)
+            delay(2000L)
+            mutableStateFlow.emit(400)
+        }
+        return mutableStateFlow
     }
 
 }
