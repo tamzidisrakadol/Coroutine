@@ -34,7 +34,7 @@ class MainActivity3 : AppCompatActivity() {
            **/
         producer()
         consumer()
-
+//
 //        lifecycleScope.launch {
 //            //this "data" variable  is a consumer \\ if there is no consumer then producer not produce data
 //            val data: Flow<Int> = listProducer()
@@ -81,16 +81,28 @@ class MainActivity3 : AppCompatActivity() {
 //                    }
 //
 //        }
-
-
+//
+//        lifecycleScope.launch {
+//            try {
+//                listProducer().collect{
+//                    Log.d(TAG,it.toString())
+//                }
+//            }catch (e:Exception){
+//                Log.d(TAG,e.message.toString())
+//            }
+//        }
+        lifecycleScope.launch {
+            val data4 = flowListUser()
+            data4.collect{
+                Log.d(TAG,"data4 ITem- $it")
+            }
+        }
 
         lifecycleScope.launch {
-            try {
-                listProducer().collect{
-                    Log.d(TAG,it.toString())
-                }
-            }catch (e:Exception){
-                Log.d(TAG,e.message.toString())
+            val data5 = flowListUser()
+            delay(4000L)
+            data5.collect{
+                Log.d(TAG,"data5 ITem- $it")
             }
         }
 
@@ -122,6 +134,23 @@ class MainActivity3 : AppCompatActivity() {
         }
     }.catch {
         Log.d(TAG,"Emmit catch ${it.message}")
+    }
+
+
+    //SharedFlow ->another types of flow which are hot in nature-> it can be only SharedFlow or MutableSharedFlow
+    //it can also store value for slow consumer
+    //flowListUser function is encapsulated by mutableSharedFlow
+    private fun flowListUser(): Flow<Int> {
+        val mutableFlow = MutableSharedFlow<Int>(2)
+        lifecycleScope.launch{
+            val list = listOf<Int>(12,23,34,45,56,67,78,89,90)
+            list.forEach {
+                delay(1000L)
+                mutableFlow.emit(it)
+
+            }
+        }
+        return mutableFlow
     }
 
 }
